@@ -1,134 +1,58 @@
-# Hash Maps & Sets Pattern
+# Hash Maps & Sets
 
-## When to Use This Pattern
-- Need O(1) lookup time
-- Checking "have I seen this before?"
-- Need to map one value to another
-- Counting frequencies
-- Finding pairs/complements
+## When to Use
+- "Have I seen this?" → **Set**
+- "Find complement/pair" → **Dict** (value→index)
+- "Count frequencies" → **Dict** (item→count)
 
----
-
-## Set vs Dictionary - Quick Reference
-
-| Use Case | Data Structure | Why |
-|----------|---------------|-----|
-| Just checking existence | **Set** | Simpler, less memory |
-| Need to store associated data | **Dictionary** | Can map key → value |
-| Counting occurrences | **Dictionary** | Map number → count |
-| Finding complements | **Dictionary** | Map number → index |
-
----
-
-## Core Operations (Both O(1))
-
-### Set
+## Syntax
 ```python
-seen = set()           # Create empty set
-seen.add(5)           # Add element
-if 5 in seen:         # Check existence
-    print("Found!")
+# Set
+seen = set()
+seen.add(5)
+if 5 in seen: ...
+
+# Dictionary
+mapping = {}
+mapping[5] = "value"
+if 5 in mapping: ...
+mapping.get(5, 0)  # Returns 0 if key doesn't exist
 ```
-
-### Dictionary
-```python
-mapping = {}          # Create empty dict
-mapping[5] = "value"  # Add key-value pair
-if 5 in mapping:      # Check if key exists
-    print("Found!")
-value = mapping.get(5, "default")  # Safe access with default
-```
-
----
-
-## Pattern Recognition
-
-### Pattern 1: "Have I seen this before?"
-**→ Use a Set**
-- Contains Duplicate
-- First unique character
-
-### Pattern 2: "What's the complement/pair?"
-**→ Use a Dictionary (store value → index/data)**
-- Two Sum
-- Valid Anagram (letter → count)
-
-### Pattern 3: "Count frequencies"
-**→ Use a Dictionary (element → count)**
-- Top K Frequent Elements
-- Group Anagrams
-
----
 
 ## Key Insights
+1. **Build as you go** - Check and add in same loop
+2. **Early return** - Return immediately when found
+3. **O(1) lookup** - Hash structures vs O(n) for lists
 
-1. **Early Return Optimization**: If you find what you're looking for, return immediately. Don't keep looping.
+## Cleaner Code Tips
+```python
+# ❌ Don't do this
+for i in range(len(arr)):
+    item = arr[i]
 
-2. **Build as You Go**: Don't populate the entire hash map first, then search. Check and add in the same loop.
+# ✅ Do this
+for item in arr:
+    ...
 
-3. **Space Trade-off**: Hash maps/sets use O(n) space but give you O(1) lookups. Worth it when you need speed.
+# ❌ Don't do this
+if condition:
+    return True
+return False
 
----
+# ✅ Do this
+return condition
+
+# ❌ Don't do this (frequency counting)
+if char in count:
+    count[char] += 1
+else:
+    count[char] = 1
+
+# ✅ Do this
+count[char] = count.get(char, 0) + 1
+```
 
 ## Problems Solved
-
-### 1. Two Sum
-- **Pattern**: Dictionary (number → index)
-- **Key Idea**: Store complement, check if current number was someone's complement
-- **Time**: O(n), **Space**: O(n)
-
-### 2. Contains Duplicate  
-- **Pattern**: Set (just existence check)
-- **Key Idea**: Check if seen before adding
-- **Time**: O(n), **Space**: O(n)
-
----
-
-## Common Mistakes to Avoid
-
-1. ❌ Using `for i in range(len(array))` when you don't need the index
-   - ✅ Use `for item in array` instead
-
-2. ❌ Building entire hash map first, then searching
-   - ✅ Check and add in same pass
-
-3. ❌ Using dictionary when set would work
-   - ✅ If you only need existence, use set
-
-4. ❌ Forgetting that `in` operator is O(1) for hash structures, O(n) for lists
-   - ✅ Never use list for lookups in a loop
-
----
-
-## Template Code
-
-### "Have I Seen This?" Pattern
-```python
-def solve(arr):
-    seen = set()
-    for item in arr:
-        if item in seen:
-            return True  # or whatever you need to do
-        seen.add(item)
-    return False
-```
-
-### "Find Complement" Pattern  
-```python
-def solve(arr, target):
-    mapping = {}
-    for i, num in enumerate(arr):
-        complement = target - num
-        if complement in mapping:
-            return [mapping[complement], i]
-        mapping[num] = i
-    return []
-```
-
----
-
-## Next Patterns to Learn
-- Two Pointers
-- Sliding Window
-- Fast & Slow Pointers
-- Binary Search
+1. **Two Sum** - Dict (num→index), O(n)/O(n)
+2. **Contains Duplicate** - Set, O(n)/O(n)
+3. **Valid Anagram** - Dict (char→count), O(n)/O(n)
